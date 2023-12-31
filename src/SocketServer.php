@@ -40,8 +40,8 @@ class SocketServer
     private function handleConnections(): void
     {
 
-        $this->runAllHandlers();
-        $this->reset();
+        $this->runAllHandlers(); //@TODO this line should be solved
+        $this->reset();//@TODO this line should be solved
 
         $sockets = $this->clients;
         $exceptions = $sockets;
