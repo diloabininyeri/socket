@@ -1,0 +1,20 @@
+{
+  "name": "zeus/pusher",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Abdulkadir(Dılo) Sürücü",
+      "email": "berxudar@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Zeus\\Pusher\\": "src/"
+    }
+  },
+  "require": {
+    "ext-sockets": "*"
+  }
+}
