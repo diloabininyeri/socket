@@ -44,6 +44,11 @@ abstract class AbstractSocketClientHandler
      */
     public function getMessage(): string|false
     {
+        return Message::decode($this->message);
+    }
+
+    public function getRawMessage():string
+    {
         return $this->message;
     }
 

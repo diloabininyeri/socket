@@ -84,7 +84,9 @@ class SocketServer
         }
         foreach ($sockets as $socket) {
             if ($socket === $this->socket) {
-                $this->clients[] = socket_accept($this->socket);
+                $newClient = socket_accept($this->socket);
+                $this->clients[] = $newClient;
+                HandShake::to($newClient)->accept();
             } else {
                 $this->broadcast->join('public', $socket);
 
@@ -93,7 +95,8 @@ class SocketServer
                     $socket,
                     $read = socket_read($socket, 1024)
                 );
-                $this->debugger->onRead($read);
+                $this->debugger->onRead(Message::decode($read));
+
             }
         }
 

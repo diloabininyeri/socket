@@ -42,7 +42,7 @@ class Broadcast
         $select = socket_Select($sockets, $writeSockets, $exceptions, 5);
         if ($select > 0) {
             foreach ($writeSockets as $writeSocket) {
-                socket_write($writeSocket, $message);
+                socket_write($writeSocket, Message::encode($message));
             }
         }
     }

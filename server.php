@@ -4,8 +4,10 @@
 require_once 'vendor/autoload.php';
 
 use Zeus\Pusher\AbstractSocketClientHandler;
-use Zeus\Pusher\SocketServer;
 use Zeus\Pusher\DebuggerInterface;
+use Zeus\Pusher\HandShake;
+use Zeus\Pusher\Message;
+use Zeus\Pusher\SocketServer;
 
 
 class DebuggerX implements DebuggerInterface
@@ -29,14 +31,8 @@ class TestHandler extends AbstractSocketClientHandler
     #[Override]
     public function run(): void
     {
-
-        $json_decode = json_decode($this->getMessage(), true, 512, JSON_THROW_ON_ERROR);
-        ['channel' => $channel, 'data' => $data] = $json_decode;
-
-        $this->broadcast->createAndJoin($channel, $this->getSocket());
-
-        $this->broadcast->sendTo($channel, $data);
-
+        $this->getMessage();
+        $this->broadcast->sendToEveryone('hello world');
     }
 }
 
