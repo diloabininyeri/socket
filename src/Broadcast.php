@@ -32,8 +32,18 @@ class Broadcast
      */
     public function sendTo(string $channelName, string $message): void
     {
-        foreach ($this->channels[$channelName]->getSockets() as $socket) {
-            socket_write($socket, $message);
+        $sockets = $this->channels[$channelName]?->getSockets() ?? [];
+
+        if (empty($sockets)) {
+            return;
+        }
+        $exceptions = null;
+        $writeSockets = $sockets;
+        $select = socket_Select($sockets, $writeSockets, $exceptions, 5);
+        if ($select > 0) {
+            foreach ($writeSockets as $writeSocket) {
+                socket_write($writeSocket, $message);
+            }
         }
     }
 
@@ -86,9 +96,7 @@ class Broadcast
     public function sendToEveryone(string $message): void
     {
         foreach ($this->channels as $channel) {
-            foreach ($channel->getSockets() as $socket) {
-                socket_write($socket, $message);
-            }
+            $this->sendTo($channel->getName(), $message);
         }
     }
 
@@ -165,8 +173,31 @@ class Broadcast
 
     public function send(Channel $channel, string $message): void
     {
-        foreach ($channel->getSockets() as $socket) {
-            socket_write($socket, $message);
+        $this->sendTo($channel->getName(), $message);
+    }
+
+    public function sendToExcept(string $channelName, string $message): void
+    {
+        foreach ($this->getChannels() as $channel) {
+            if ($channel->getName() !== $channelName) {
+                $this->sendTo($channel->getName(), $message);
+            }
+        }
+
+    }
+
+    /**
+     * @param string $channelName
+     * @param Socket $socket
+     * @return void
+     */
+    public function createAndJoin(string $channelName, Socket $socket): void
+    {
+        if (!$this->hasChannel($channelName)) {
+            $this->createChannel($channelName);
+        }
+        if (!$this->hasJoin($channelName, $socket)) {
+            $this->join($channelName, $socket);
         }
     }
 }
