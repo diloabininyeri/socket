@@ -42,7 +42,7 @@ readonly class HandShake
      */
     public function accept(): void
     {
-        $key = $this->headers['Sec-WebSocket-Key'] ?? null;
+        $key = $this->headers['Sec-WebSocket-Key'];
         $acceptKey = base64_encode(sha1($key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
         $response = "HTTP/1.1 101 Switching Protocols\r\n";
         $response .= "Upgrade: websocket\r\n";

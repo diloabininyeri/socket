@@ -31,8 +31,9 @@ class TestHandler extends AbstractSocketClientHandler
     #[Override]
     public function run(): void
     {
-        $this->getMessage();
-        $this->broadcast->sendToEveryone('hello world');
+        $this->broadcast->sendToEveryone(
+            $this->getMessage()
+        );
     }
 }
 
