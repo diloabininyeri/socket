@@ -70,8 +70,7 @@ class SocketServer
     {
 
 
-        $this->runAllHandlers(); //@TODO this line should be solved
-        $this->reset();//@TODO this line should be solved
+        $this->runAllHandlers();
 
         $sockets = $this->clients;
         $exceptions = $sockets;
@@ -106,19 +105,11 @@ class SocketServer
     /**
      * @return void
      */
-    private function reset(): void
-    {
-        $this->broadcast = new Broadcast();
-        $this->clientHandlers = [];
-    }
-
-    /**
-     * @return void
-     */
     private function runAllHandlers(): void
     {
-        foreach ($this->clientHandlers as $handler) {
-            $handler->run();
+        foreach ($this->clientHandlers as $key => $clientHandler) {
+            $clientHandler->run();
+            unset($this->clientHandlers[$key]);
         }
     }
 

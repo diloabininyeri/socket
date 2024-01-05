@@ -27,27 +27,7 @@ class ClientHandler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->sendToEveryone('hello');
-
-        $channel = $this
-            ->createAndJoin('notification', $this->getClient());
-
-
-        $this->send($channel,$this->getMessage());
-
-        $this->hasChannel('test_channel');
-
-        $this->createChannel('test_channel');
-
-
-        $this->hasJoin('test_channel', $this->getClient());
-        $this->sendTo('newsletter', 'a blog posted');
-        $this->sendToEveryone('bye bye');
-
-        $this->disconnect(
-            $this->getClient()
-        );
-
+        $this->sendToEveryone('hello world');
     }
 }
 

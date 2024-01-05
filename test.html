@@ -16,16 +16,11 @@
         console.log('WebSocket connection opened');
 
         // Her iki saniyede bir mesaj gönder
-        setInterval(() => {
-            const message = 'Hello from JavaScript';
-            console.log(`Sending message: ${message}`);
-            socket.send(message);
-        }, 4000);
     });
 
     socket.addEventListener('message', (event) => {
         const message = event.data;
-        console.log(`Received message: ${message}`);
+        alert(`Received message: ${message}`);
     });
 
     socket.addEventListener('close', (event) => {
@@ -34,8 +29,9 @@
 
     function sendCalculation() {
         if (socket.readyState === WebSocket.OPEN) {
+            socket.send('hello world');
             // Bağlantı tamamlandı, şimdi mesaj gönderebiliriz
-            socket.send('test foo');
+
         } else {
             // Bağlantı tamamlanmadı, bir hata mesajı gösterebiliriz veya başka bir işlem yapabiliriz
             console.error('Bağlantı hala tamamlanmadı.');
