@@ -6,7 +6,7 @@ use Socket;
 
 
 /**
- *
+ * @mixin Broadcast
  */
 abstract class AbstractSocketClientHandler
 {
@@ -15,9 +15,15 @@ abstract class AbstractSocketClientHandler
      */
     private Socket $socket;
 
+    /**
+     * @var string|false
+     */
     private string|false $message;
 
 
+    /**
+     * @param Broadcast $broadcast
+     */
     public function __construct(protected readonly Broadcast $broadcast)
     {
     }
@@ -47,19 +53,41 @@ abstract class AbstractSocketClientHandler
         return Message::decode($this->message);
     }
 
-    public function getRawMessage():string
+    /**
+     * @return string
+     */
+    public function getRawMessage(): string
     {
         return $this->message;
     }
 
+    /**
+     * @param false|string $message
+     * @return void
+     */
     public function setMessage(false|string $message): void
     {
         $this->message = $message;
     }
 
+    /**
+     * @param string $channel
+     * @return void
+     */
     protected function join(string $channel): void
     {
         $this->broadcast->join($channel, $this->socket);
+    }
+
+
+    /**
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $method, array $arguments)
+    {
+        return $this->broadcast->$method(...$arguments);
     }
 
     /**
