@@ -70,11 +70,7 @@ class Broadcast
         if (!$this->hasChannel($channelName)) {
             return false;
         }
-        return in_array(
-            $socket,
-            $this->getChannel($channelName)->getSockets(),
-            true
-        );
+        return $this->getChannel($channelName)->hasSocket($socket);
     }
 
     /**
