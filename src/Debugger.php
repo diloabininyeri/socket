@@ -8,6 +8,8 @@ class Debugger implements DebuggerInterface
     #[\Override]
     public function onRead(string $message): void
     {
-        echo date('Y-m-d H:i:s') . ' ' . $message . PHP_EOL;
+        $date = date('Y-m-d H:i:s');
+        echo "\e[32m $date: $message\e[0m";
+        echo PHP_EOL;
     }
 }
