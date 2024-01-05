@@ -171,11 +171,21 @@ class Broadcast
         return $this->channels[$channelName] = new Channel($channelName);
     }
 
+    /**
+     * @param Channel $channel
+     * @param string $message
+     * @return void
+     */
     public function send(Channel $channel, string $message): void
     {
         $this->sendTo($channel->getName(), $message);
     }
 
+    /**
+     * @param string $channelName
+     * @param string $message
+     * @return void
+     */
     public function sendToExcept(string $channelName, string $message): void
     {
         foreach ($this->getChannels() as $channel) {
@@ -189,9 +199,9 @@ class Broadcast
     /**
      * @param string $channelName
      * @param Socket $socket
-     * @return void
+     * @return Channel
      */
-    public function createAndJoin(string $channelName, Socket $socket): void
+    public function createAndJoin(string $channelName, Socket $socket): Channel
     {
         if (!$this->hasChannel($channelName)) {
             $this->createChannel($channelName);
@@ -199,5 +209,17 @@ class Broadcast
         if (!$this->hasJoin($channelName, $socket)) {
             $this->join($channelName, $socket);
         }
+        return $this->channels[$channelName];
+    }
+
+    /**
+     * @param Socket $socket
+     * @return void
+     */
+    public function disconnect(Socket $socket): void
+    {
+        $this->forget($socket);
+        $this->close($socket);
+        socket_shutdown($socket);
     }
 }

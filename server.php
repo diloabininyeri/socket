@@ -5,8 +5,6 @@ require_once 'vendor/autoload.php';
 
 use Zeus\Pusher\AbstractSocketClientHandler;
 use Zeus\Pusher\DebuggerInterface;
-use Zeus\Pusher\HandShake;
-use Zeus\Pusher\Message;
 use Zeus\Pusher\SocketServer;
 
 
@@ -22,21 +20,41 @@ class DebuggerX implements DebuggerInterface
 }
 
 
-class TestHandler extends AbstractSocketClientHandler
+class ClientHandler extends AbstractSocketClientHandler
 {
 
-    /**
-     * @throws JsonException
-     */
-    #[Override]
+
+    #[\Override]
     public function run(): void
     {
-        $this->broadcast->sendToEveryone(
-            $this->getMessage()
+        $this->broadcast->sendToEveryone('hello');
+
+        $channel = $this
+            ->broadcast
+            ->createAndJoin('notification', $this->getClient());
+
+
+        $this->broadcast->send($channel,$this->getMessage());
+
+        $this->broadcast->hasChannel('test_channel');
+
+        $this->broadcast->createChannel('test_channel');
+
+
+        $this->broadcast->hasJoin('test_channel', $this->getClient());
+
+        $this->broadcast->sendTo('newsletter', 'a blog posted');
+
+
+        $this->broadcast->sendToEveryone('bye bye');
+
+        $this->broadcast->disconnect(
+            $this->getClient()
         );
+
     }
 }
 
 
-$socketServer = new SocketServer(TestHandler::class);
+$socketServer = new SocketServer(ClientHandler::class);
 $socketServer->serve('127.0.0.1', 8080);

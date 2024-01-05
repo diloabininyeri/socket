@@ -36,6 +36,9 @@ class Message
      */
     public static function decode(mixed $message): string
     {
+        if (!isset($message[0])) {
+            return '';
+        }
 
         $opcode = ord($message[0]) & 0x0F;
 

@@ -34,7 +34,7 @@ abstract class AbstractSocketClientHandler
     /**
      * @return Socket
      */
-    public function getSocket(): Socket
+    public function getClient(): Socket
     {
         return $this->socket;
     }

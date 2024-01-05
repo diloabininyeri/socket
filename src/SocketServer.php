@@ -211,7 +211,7 @@ class SocketServer
     {
 
         foreach ($this->clientHandlers as $key => $handler) {
-            if ($client === $handler->getSocket()) {
+            if ($client === $handler->getClient()) {
                 unset($this->clientHandlers[$key]);
             }
         }
