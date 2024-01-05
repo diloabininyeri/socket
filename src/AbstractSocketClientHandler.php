@@ -13,7 +13,7 @@ abstract class AbstractSocketClientHandler
     /**
      * @var Socket
      */
-    private Socket $socket;
+    private Socket $client;
 
     /**
      * @var string|false
@@ -32,9 +32,9 @@ abstract class AbstractSocketClientHandler
      * @param Socket $socket
      * @return void
      */
-    public function setSocket(Socket $socket): void
+    public function setClient(Socket $socket): void
     {
-        $this->socket = $socket;
+        $this->client = $socket;
     }
 
     /**
@@ -42,7 +42,7 @@ abstract class AbstractSocketClientHandler
      */
     public function getClient(): Socket
     {
-        return $this->socket;
+        return $this->client;
     }
 
     /***

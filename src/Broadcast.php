@@ -32,7 +32,7 @@ class Broadcast
      */
     public function sendTo(string $channelName, string $message): void
     {
-        $sockets = $this->channels[$channelName]?->getSockets() ?? [];
+        $sockets = $this->getSockets($channelName);
 
         if (empty($sockets)) {
             return;
@@ -47,6 +47,27 @@ class Broadcast
         }
     }
 
+    /**
+     * like it.Frontend it.Backend but call like it.*
+     * @param string $wildcardPattern
+     * @return array
+     */
+    private function getSocketsByPattern(string $wildcardPattern): array
+    {
+        $sockets = [];
+        $escaped = str_replace('.*', '\..*', $wildcardPattern);
+        $pattern = sprintf('/^%s$/', $escaped);
+
+        foreach ($this->channels as $channel) {
+            if (preg_match($pattern, $channel->getName())) {
+                $sockets[] = $channel->getSockets();
+            }
+        }
+
+        return Arr::unique(
+            Arr::flatten($sockets)
+        );
+    }
 
     /**
      * @param string $channelName
@@ -217,5 +238,18 @@ class Broadcast
         $this->forget($socket);
         $this->close($socket);
         socket_shutdown($socket);
+    }
+
+    /**
+     * @param string $channelName
+     * @return array
+     */
+    private function getSockets(string $channelName): array
+    {
+        if (str_contains($channelName, '.*')) {
+            return $this->getSocketsByPattern($channelName);
+        }
+
+        return $this->channels[$channelName]?->getSockets() ?? [];
     }
 }

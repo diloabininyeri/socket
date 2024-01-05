@@ -116,7 +116,7 @@ class SocketServer
     {
 
         if ($message) {
-            $clientHandler->setSocket($socket);
+            $clientHandler->setClient($socket);
             $clientHandler->setMessage($message);
             $this->addSocketHandlerInstance($clientHandler);
             return;
@@ -171,8 +171,14 @@ class SocketServer
     private function createSocket(string $host, int $port): void
     {
         $this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        socket_bind($this->socket, $host, $port);
-        socket_listen($this->socket);
+        $socketBind = socket_bind($this->socket, $host, $port);
+        if ($socketBind === false) {
+            $this->throwException();
+        }
+        $socketListen = socket_listen($this->socket);
+        if ($socketListen === false) {
+            $this->throwException();
+        }
         $this->clients[] = $this->socket;
     }
 
@@ -247,5 +253,17 @@ class SocketServer
         $errorCode = socket_last_error();
         $errorMessage = socket_strerror($errorCode);
         echo "Error reading from socket: [$errorCode] $errorMessage\n";
+    }
+
+    /***
+     * @return void
+     */
+    private function throwException(): void
+    {
+        throw new SocketException(
+            socket_strerror(
+                socket_last_error($this->socket)
+            )
+        );
     }
 }
