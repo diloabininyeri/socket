@@ -1,4 +1,9 @@
 The library continues to be developed...
+
+for install
+```console
+composer require zeus/pusher:dev-main
+```
 server.php
 ```php
 use Zeus\Pusher\AbstractSocketClientHandler;
