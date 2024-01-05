@@ -69,17 +69,6 @@ abstract class AbstractSocketClientHandler
     {
         $this->message = $message;
     }
-
-    /**
-     * @param string $channel
-     * @return void
-     */
-    protected function join(string $channel): void
-    {
-        $this->broadcast->join($channel, $this->socket);
-    }
-
-
     /**
      * @param string $method
      * @param array $arguments
