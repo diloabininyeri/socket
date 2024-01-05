@@ -58,8 +58,9 @@ class SocketServer
         $this->createSocket($host, $port);
         printf('socket started at ws://%s:%d %s', $host, $port, PHP_EOL);
         while (true) {
+            $this->runAllHandlers();
             $this->handleConnections();
-            usleep(1000);
+            usleep(10000);
         }
     }
 
@@ -68,38 +69,19 @@ class SocketServer
      */
     private function handleConnections(): void
     {
-
-
-        $this->runAllHandlers();
-
         $sockets = $this->clients;
-        $exceptions = $sockets;
-        $socketSelect = socket_select($sockets, $wr, $exceptions, $this->getTimeout());
+        $socketSelect = socket_select($sockets, $wr, $exc, $this->getTimeout());
 
         if ($socketSelect === false) {
-            $errorCode = socket_last_error();
-            $errorMessage = socket_strerror($errorCode);
-            echo "Error reading from socket: [$errorCode] $errorMessage\n";
+            $this->handleSocketError();
         }
         foreach ($sockets as $socket) {
             if ($socket === $this->socket) {
-                $newClient = socket_accept($this->socket);
-                $this->clients[] = $newClient;
-                HandShake::to($newClient)->accept();
+                $this->handleNewConnection();
             } else {
-                $this->broadcast->join('public', $socket);
-
-                $this->setSocketOfHandler(
-                    $this->getSocketHandlerInstance(),
-                    $socket,
-                    $read = socket_read($socket, 1024)
-                );
-                $this->debugger->onRead(Message::decode($read));
-
+                $this->handleExistingConnection($socket);
             }
         }
-
-        usleep(1000);
     }
 
     /**
@@ -227,5 +209,43 @@ class SocketServer
     {
         $this->debugger = $debugger;
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    private function handleNewConnection(): void
+    {
+        $newClient = socket_accept($this->socket);
+        if (false !== $newClient) {
+            $this->clients[] = $newClient;
+            HandShake::to($newClient)->accept();
+        }
+    }
+
+    /**
+     * @param Socket $socket
+     * @return void
+     */
+    private function handleExistingConnection(Socket $socket): void
+    {
+        $this->broadcast->join('public', $socket);
+
+        $this->setSocketOfHandler(
+            $this->getSocketHandlerInstance(),
+            $socket,
+            $read = socket_read($socket, 1024)
+        );
+        $this->debugger->onRead(Message::decode($read));
+    }
+
+    /**
+     * @return void
+     */
+    private function handleSocketError(): void
+    {
+        $errorCode = socket_last_error();
+        $errorMessage = socket_strerror($errorCode);
+        echo "Error reading from socket: [$errorCode] $errorMessage\n";
     }
 }

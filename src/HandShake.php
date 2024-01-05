@@ -4,19 +4,29 @@ namespace Zeus\Pusher;
 
 use Socket;
 
+
 /**
  *
  */
-readonly class HandShake
+class HandShake
 {
-
+    /**
+     * @var array
+     */
+    private array $headers;
+    /**
+     * @var Socket
+     */
+    private Socket $socket;
 
     /**
      * @param array $headers
      * @param Socket $socket
      */
-    public function __construct(private array $headers, private Socket $socket)
+    public function __construct(array $headers, Socket $socket)
     {
+        $this->headers = $headers;
+        $this->socket = $socket;
     }
 
     /**
@@ -25,16 +35,7 @@ readonly class HandShake
      */
     public static function to(Socket $socket): self
     {
-        $headers = [];
-        $lines = preg_split("/\r\n/", socket_read($socket, 4096), -1, PREG_SPLIT_NO_EMPTY);
-        foreach ($lines as $line) {
-            $line = rtrim($line);
-            if (preg_match('/\A(\S+): (.*)\z/', $line, $matches)) {
-                $headers[$matches[1]] = $matches[2];
-            }
-        }
-
-        return new self($headers, $socket);
+        return new self(static::readHeaders($socket), $socket);
     }
 
     /**
@@ -50,6 +51,22 @@ readonly class HandShake
         $response .= "Sec-WebSocket-Accept: $acceptKey\r\n\r\n";
 
         socket_write($this->socket, $response, strlen($response));
+    }
 
+    /**
+     * @param Socket $socket
+     * @return array
+     */
+    private static function readHeaders(Socket $socket): array
+    {
+        $headers = [];
+        $lines = preg_split("/\r\n/", socket_read($socket, 4096), -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($lines as $line) {
+            $line = rtrim($line);
+            if (preg_match('/\A(\S+): (.*)\z/', $line, $matches)) {
+                $headers[$matches[1]] = $matches[2];
+            }
+        }
+        return $headers;
     }
 }
