@@ -52,3 +52,26 @@ js websocket code
 </body>
 </html>
 ```
+supports the wildcard
+
+```php
+class Handler extends AbstractSocketClientHandler
+{
+
+    #[\Override]
+    public function run(): void
+    {
+
+        $this->join('it.frontend', $this->getClient());
+        $this->join('it.backend', $this->getClient());
+
+        $this->sendTo('it.*', 'hello world');
+
+
+    }
+}
+
+
+$socketServer = new SocketServer(Handler::class);
+$socketServer->serve('127.0.0.1', 8080);
+```
