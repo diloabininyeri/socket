@@ -26,4 +26,24 @@ class Arr
     {
         return array_unique($array, SORT_REGULAR);
     }
+
+    /**
+     * @param string $dotNotation
+     * @param array $array
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function dot(string $dotNotation, array $array, mixed $default=null): mixed
+    {
+        $keys = explode('.', $dotNotation);
+        foreach ($keys as $nestedKey) {
+            if (isset($array[$nestedKey])) {
+                $array = $array[$nestedKey];
+            } else {
+                return $default;
+            }
+        }
+
+        return $array;
+    }
 }

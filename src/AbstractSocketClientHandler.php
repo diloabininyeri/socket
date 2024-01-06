@@ -2,6 +2,7 @@
 
 namespace Zeus\Pusher;
 
+use JsonException;
 use Socket;
 
 
@@ -20,6 +21,8 @@ abstract class AbstractSocketClientHandler
      */
     private string|false $message;
 
+
+    private array $extractedJson = [];
 
     /**
      * @param Broadcast $broadcast
@@ -69,6 +72,7 @@ abstract class AbstractSocketClientHandler
     {
         $this->message = $message;
     }
+
     /**
      * @param string $method
      * @param array $arguments
@@ -80,7 +84,39 @@ abstract class AbstractSocketClientHandler
     }
 
     /**
+     * @return bool
+     */
+    public function isMessageJson(): bool
+    {
+        return json_validate($this->getMessage());
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function getJsonValue(string $dotNotation, mixed $default=null): mixed
+    {
+        return Arr::dot($dotNotation, $this->getJson(),$default);
+    }
+
+    /**
      * @return void
      */
     abstract public function run(): void;
+
+    /***
+     * @return array
+     * @throws JsonException
+     */
+    public function getJson(): array
+    {
+        if (!$this->isMessageJson()) {
+            return [];
+        }
+        if ($this->extractedJson) {
+            return $this->extractedJson;
+        }
+        $this->extractedJson = json_decode($this->getMessage(), true, 512, JSON_THROW_ON_ERROR);
+        return $this->extractedJson;
+    }
 }
