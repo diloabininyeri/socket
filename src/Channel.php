@@ -27,7 +27,7 @@ class Channel
      */
     public function join(Socket $socket): void
     {
-        if (!$this->hasSocket($socket)) {
+        if (!$this->hasJoin($socket)) {
             $this->sockets[] = $socket;
         }
     }
@@ -64,7 +64,7 @@ class Channel
      * @param Socket $socket
      * @return bool
      */
-    public function hasSocket(Socket $socket): bool
+    public function hasJoin(Socket $socket): bool
     {
         return in_array($socket, $this->sockets, true);
     }

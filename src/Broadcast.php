@@ -16,6 +16,11 @@ class Broadcast
     private array $channels;
 
     /**
+     * @var Send
+     */
+    private Send $sendInstance;
+
+    /**
      *
      */
     public function __construct()
@@ -24,28 +29,7 @@ class Broadcast
             'private' => new Channel('private'),
             'public' => new Channel('public')
         ];
-    }
-
-    /**
-     * @param string $channelName
-     * @param string $message
-     * @return void
-     */
-    public function sendTo(string $channelName, string $message): void
-    {
-        $sockets = $this->getSockets($channelName);
-
-        if (empty($sockets)) {
-            return;
-        }
-        $exceptions = null;
-        $writeSockets = $sockets;
-        $select = socket_Select($sockets, $writeSockets, $exceptions, 5);
-        if ($select > 0) {
-            foreach ($writeSockets as $writeSocket) {
-                socket_write($writeSocket, Message::encode($message));
-            }
-        }
+        $this->sendInstance = new Send($this);
     }
 
     /**
@@ -110,7 +94,7 @@ class Broadcast
         if (!$this->hasChannel($channelName)) {
             return false;
         }
-        return $this->findChannel($channelName)->hasSocket($socket);
+        return $this->findChannel($channelName)->hasJoin($socket);
     }
 
     /**
@@ -122,17 +106,6 @@ class Broadcast
     {
         if (isset($this->channels[$channel])) {
             $this->channels[$channel]->leave($socket);
-        }
-    }
-
-    /**
-     * @param string $message
-     * @return void
-     */
-    public function sendToEveryone(string $message): void
-    {
-        foreach ($this->channels as $channel) {
-            $this->sendTo($channel->getName(), $message);
         }
     }
 
@@ -183,14 +156,6 @@ class Broadcast
     }
 
     /**
-     * @return Channel
-     */
-    public function getPublicChannel(): Channel
-    {
-        return $this->channels['public'];
-    }
-
-    /**
      * @return Channel[]
      */
     public function getChannels(): array
@@ -207,47 +172,13 @@ class Broadcast
         return $this->channels[$channelName] = new Channel($channelName);
     }
 
-    /**
-     * @param Channel $channel
-     * @param string $message
-     * @return void
+    /***
+     * @return Send
      */
-    public function send(Channel $channel, string $message): void
+    public function sendTo(): Send
     {
-        $this->sendTo($channel->getName(), $message);
+        return $this->sendInstance;
     }
-
-    /**
-     * @param string $channelName
-     * @param string $message
-     * @return void
-     */
-    public function sendToExcept(string $channelName, string $message): void
-    {
-        foreach ($this->getChannels() as $channel) {
-            if ($channel->getName() !== $channelName) {
-                $this->sendTo($channel->getName(), $message);
-            }
-        }
-
-    }
-
-    /**
-     * @param string $channelName
-     * @param Socket $socket
-     * @return Channel
-     */
-    public function createAndJoin(string $channelName, Socket $socket): Channel
-    {
-        if (!$this->hasChannel($channelName)) {
-            $this->createChannel($channelName);
-        }
-        if (!$this->hasJoin($channelName, $socket)) {
-            $this->join($channelName, $socket);
-        }
-        return $this->channels[$channelName];
-    }
-
     /**
      * @param Socket $socket
      * @return void
@@ -263,7 +194,7 @@ class Broadcast
      * @param string $channelName
      * @return array
      */
-    private function getSockets(string $channelName): array
+    public function getSockets(string $channelName): array
     {
         if (str_contains($channelName, '.*')) {
             return $this->getSocketsByPattern($channelName);

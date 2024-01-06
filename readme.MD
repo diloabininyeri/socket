@@ -5,9 +5,10 @@ for install
 composer require zeus/pusher:dev-main
 ```
 server.php
+
 ```php
 use Zeus\Pusher\AbstractSocketClientHandler;
-use Zeus\Pusher\SocketServer;
+use Zeus\Pusher\Send;use Zeus\Pusher\SocketServer;
 
 
 class ClientHandler extends AbstractSocketClientHandler
@@ -17,7 +18,7 @@ class ClientHandler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->sendToEveryone($this->getMessage());
+        $this->sendTo()->everyone($this->getMessage());
     }
 }
 
@@ -65,7 +66,7 @@ class Handler extends AbstractSocketClientHandler
         $this->join('it.frontend', $this->getClient());
         $this->join('it.backend', $this->getClient());
 
-        $this->sendTo('it.*', 'hello world');
+        $this->sendTo()->channel('it.*', 'hello world');
 
 
     }
