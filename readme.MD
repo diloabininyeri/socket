@@ -76,3 +76,35 @@ class Handler extends AbstractSocketClientHandler
 $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 8080);
 ```
+
+For example, subscribing to channels with json and sending messages to subscribe channels
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     * @throws JsonException
+     */
+    #[\Override]
+    public function run(): void
+    {
+        if ($this->isMessageJson()) {
+
+            $this->join(
+                $this->getJsonValue('channel'),
+                $this->getClient()
+            );
+
+            $this->sendTo()->channel(
+                $this->getJsonValue('channel'),
+                $this->getJsonValue('message')
+            );
+        }
+    }
+}
+
+
+$socketServer = new SocketServer(Handler::class);
+$socketServer->serve('127.0.0.1', 9999);
+```
