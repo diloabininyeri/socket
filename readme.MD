@@ -1,9 +1,13 @@
-The library continues to be developed...
+
+### Socket Channels
+
+This is a socket library, it is an advanced library, the purpose of which is to subscribe to channels on the socket and send messages to channels, as well as leaving channels...
 
 for install
 ```console
 composer require zeus/pusher:dev-main
 ```
+let's, For example, let's send the message to everyone.
 server.php
 
 ```php
@@ -26,6 +30,10 @@ class ClientHandler extends AbstractSocketClientHandler
 $socketServer = new SocketServer(ClientHandler::class);
 $socketServer->serve('127.0.0.1', 8080);
 
+```
+Run in the Terminal
+```console
+php server.php
 ```
 js websocket code
 
@@ -53,7 +61,10 @@ js websocket code
 </body>
 </html>
 ```
-supports the wildcard
+
+### Works with the wildcard
+
+You can use wildcard in channel management.
 
 ```php
 class Handler extends AbstractSocketClientHandler
@@ -77,7 +88,8 @@ $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 8080);
 ```
 
-For example, subscribing to channels with json and sending messages to subscribe channels
+### Works with the json
+Let's subscribe to the channels with the json coming from the frontend and send messages to the channels.
 js code
 ```javascript
 
