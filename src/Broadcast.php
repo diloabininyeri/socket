@@ -26,7 +26,6 @@ class Broadcast
     public function __construct()
     {
         $this->channels = [
-            'private' => new Channel('private'),
             'public' => new Channel('public')
         ];
         $this->sendInstance = new Send($this);

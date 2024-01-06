@@ -21,9 +21,7 @@ readonly class Send
      */
     public function everyone(string $message): void
     {
-        foreach ($this->broadcast->getChannels() as $channel) {
-            $this->channel($channel->getName(), $message);
-        }
+        $this->channel('public', $message);
     }
 
     /***
