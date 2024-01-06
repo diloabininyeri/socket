@@ -3,6 +3,7 @@
 namespace Zeus\Pusher;
 
 use Socket;
+use Zeus\Pusher\exceptions\InvalidPatternException;
 
 /**
  *
@@ -48,26 +49,44 @@ class Broadcast
     }
 
     /**
-     * like it.Frontend it.Backend but call like it.*
      * @param string $wildcardPattern
      * @return array
      */
     private function getSocketsByPattern(string $wildcardPattern): array
     {
         $sockets = [];
-        $escaped = str_replace('.*', '\..*', $wildcardPattern);
-        $pattern = sprintf('/^%s$/', $escaped);
-
-        foreach ($this->channels as $channel) {
-            if (preg_match($pattern, $channel->getName())) {
-                $sockets[] = $channel->getSockets();
-            }
+        foreach ($this->getChannelNamesByWildcard($wildcardPattern) as $channelName) {
+            $sockets[] = $this->findChannel($channelName)->getSockets();
         }
 
         return Arr::unique(
             Arr::flatten($sockets)
         );
     }
+
+    /**
+     * @param string $wildcardPattern
+     * @return array
+     */
+    public function getChannelNamesByWildcard(string $wildcardPattern): array
+    {
+
+        if (!str_contains($wildcardPattern, '.*')) {
+            throw new InvalidPatternException('Wildcard pattern is not a valid wildcard pattern');
+        }
+
+        $escaped = str_replace('.*', '\..*', $wildcardPattern);
+        $pattern = sprintf('/^%s$/', $escaped);
+        $names = [];
+        foreach ($this->channels as $channel) {
+
+            if (preg_match($pattern, $channel->getName())) {
+                $names[] = $channel->getName();
+            }
+        }
+        return $names;
+    }
+
 
     /**
      * @param string $channelName
@@ -91,7 +110,7 @@ class Broadcast
         if (!$this->hasChannel($channelName)) {
             return false;
         }
-        return $this->getChannel($channelName)->hasSocket($socket);
+        return $this->findChannel($channelName)->hasSocket($socket);
     }
 
     /**
@@ -158,7 +177,7 @@ class Broadcast
      * @param string $channel
      * @return Channel
      */
-    public function getChannel(string $channel): Channel
+    public function findChannel(string $channel): Channel
     {
         return $this->channels[$channel];
     }

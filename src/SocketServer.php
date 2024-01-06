@@ -3,6 +3,7 @@
 namespace Zeus\Pusher;
 
 use Socket;
+use Zeus\Pusher\exceptions\SocketException;
 
 /**
  *
