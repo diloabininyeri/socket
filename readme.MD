@@ -78,6 +78,16 @@ $socketServer->serve('127.0.0.1', 8080);
 ```
 
 For example, subscribing to channels with json and sending messages to subscribe channels
+js code
+```javascript
+
+const message = document.querySelector('#message');
+const channel = document.querySelector('#channel');
+const data = {channel: channel.value, message: message.value};
+socket.send(JSON.stringify(data));
+
+```
+php code 
 ```php
 
 class Handler extends AbstractSocketClientHandler
