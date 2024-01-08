@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<input type="text" placeholder="channel" id="channel">
+<br>
+<input type="text" placeholder="message" id="message">
+
+<br>
+<button onclick="test()">try it</button>
+
+<script>
+    const socket = new WebSocket('ws://192.168.1.159:8080');
+
+    socket.onopen = function (ev) {
+        console.log('opened connection');
+        console.log(ev);
+    };
+
+    socket.onmessage = function (ev) {
+        console.log('recep');
+       alert(ev.data);
+    };
+
+
+    function test() {
+        const message = document.querySelector('#message');
+        const channel = document.querySelector('#channel');
+        const data = {channel: channel.value, message: message.value};
+        socket.send(JSON.stringify(data));
+    }
+</script>
+</body>
+</html>
