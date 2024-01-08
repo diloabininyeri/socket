@@ -22,6 +22,9 @@ abstract class AbstractSocketClientHandler
     private string|false $message;
 
 
+    /**
+     * @var array
+     */
     private array $extractedJson = [];
 
     /**
@@ -53,7 +56,10 @@ abstract class AbstractSocketClientHandler
      */
     public function getMessage(): string|false
     {
-        return Message::decode($this->message);
+        if ($this->isFromWebsocket()) {
+            return Message::decode($this->message);
+        }
+        return $this->message;
     }
 
     /**
@@ -92,11 +98,20 @@ abstract class AbstractSocketClientHandler
     }
 
     /**
+     * check the message whether it comes from the browser or not
+     * @return bool
+     */
+    public function isFromWebsocket(): bool
+    {
+        return Message::isEncoded($this->message);
+    }
+
+    /**
      * @throws JsonException
      */
-    public function getJsonValue(string $dotNotation, mixed $default=null): mixed
+    public function getJsonValue(string $dotNotation, mixed $default = null): mixed
     {
-        return Arr::dot($dotNotation, $this->getJson(),$default);
+        return Arr::dot($dotNotation, $this->getJson(), $default);
     }
 
     /**

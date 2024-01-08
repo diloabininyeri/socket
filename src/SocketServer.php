@@ -243,7 +243,7 @@ class SocketServer
             $socket,
             $read = socket_read($socket, 1024)
         );
-        $this->debugger->onRead(Message::decode($read));
+        $this->callDebug($read);
     }
 
     /**
@@ -266,5 +266,18 @@ class SocketServer
                 socket_last_error($this->socket)
             )
         );
+    }
+
+    /***
+     * @param false|string $read
+     * @return void
+     */
+    private function callDebug(false|string $read): void
+    {
+        if (Message::isEncoded($read)) {
+            $this->debugger->onRead(Message::decode($read));
+            return;
+        }
+        $this->debugger->onRead($read);
     }
 }

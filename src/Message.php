@@ -14,7 +14,6 @@ class Message
      */
     public static function encode(string $message): string
     {
-//        $message = trim($message);
         $firstByte = 0x81;
         $length = strlen($message);
 
@@ -64,5 +63,18 @@ class Message
         }
 
         return $decodedData;
+    }
+
+    /**
+     * @param string $message
+     * @return bool
+     */
+    public static function isEncoded(string $message): bool
+    {
+        if (strlen($message) < 2) {
+            return false;
+        }
+        $opcode = ord($message[0]) & 0x0F;
+        return $opcode === 0x1;
     }
 }
