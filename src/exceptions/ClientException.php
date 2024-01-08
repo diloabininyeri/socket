@@ -2,7 +2,12 @@
 
 namespace Zeus\Pusher\exceptions;
 
-class ClientException
+use RuntimeException;
+
+/**
+ *
+ */
+class ClientException extends RuntimeException
 {
 
 }

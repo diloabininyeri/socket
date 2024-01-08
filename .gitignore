@@ -1,6 +1,2 @@
 .idea
 vendor
-server.php
-client.php
-client_read.php
-test.html
