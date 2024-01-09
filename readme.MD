@@ -13,6 +13,8 @@ We manage the entire socket server with an object inherited from the AbstractSoc
 In the example below, it is the ClientHandler object, but this is entirely up to your wishes.
 Let's, For example, let's send the message to everyone.
 
+
+
 server.php
 ```php
 use Zeus\Pusher\AbstractSocketClientHandler;
@@ -76,6 +78,8 @@ join and leave,this is purely for managing channels well...
 
 In the example below, we subscribe to `it.backend` and `it.frontend` channels and the beginning is `it.` We send notifications to all channels that start,
 the purpose here is to group the channels.
+
+First of all, we use the getClient() method to get the connected client...
 
 ```php
 class Handler extends AbstractSocketClientHandler
