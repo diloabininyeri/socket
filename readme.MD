@@ -113,8 +113,8 @@ class Handler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->leave('it.backend');
-        $this->hasJoin('it.backend');
+        $this->leave('it.backend', $this->getClient());
+        $this->hasJoin('it.backend', $this->getClient());
         $this->hasChannel('it.backend');
         $this->findChannel('it.backend');
         $this->getChannels();
