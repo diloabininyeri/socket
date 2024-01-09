@@ -69,6 +69,13 @@ js websocket code
 ### Works with the wildcard
 
 You can use wildcard in channel management.
+Here, the join method is subscribing to the channel, at the same time, you can use the leave method to cancel the subscription to the channel, you can subscribe to the channels and receive notifications, in fact, the main logic is like a real scenario and if we want to give up notifications to the channels, we use the leave method, that's all.
+
+Additionally, there are more methods besides methods such as hasJoin, 
+join and leave,this is purely for managing channels well...
+
+In the example below, we subscribe to `it.backend` and `it.frontend` channels and the beginning is `it.` We send notifications to all channels that start,
+the purpose here is to group the channels.
 
 ```php
 class Handler extends AbstractSocketClientHandler
@@ -92,6 +99,31 @@ $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 8080);
 ```
 
+**Some methods for the channel, but don't forget there are more**
+
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    #[\Override]
+    public function run(): void
+    {
+        $this->leave('it.backend');
+        $this->hasJoin('it.backend');
+        $this->hasChannel('it.backend');
+        $this->findChannel('it.backend');
+        $this->getChannels();
+        //and more
+    }
+}
+```
+
+>note: leave method does not support wildcard for now.
+it will not working,I thought this was not appropriate due to its completely irreversible effects
+```php
+$this->leave('it.*');
+```
 ### Works with the json
 Let's subscribe to the channels with the json coming from the frontend and send messages to the channels.
 js code
