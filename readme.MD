@@ -113,7 +113,7 @@ class Handler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->leave('it.backend', $this->getClient());
+        $this->leave('it.backend');
         $this->hasJoin('it.backend');
         $this->hasChannel('it.backend');
         $this->findChannel('it.backend');
@@ -146,6 +146,12 @@ socket.send(JSON.stringify(data));
 ```
 **In the Backend**
 ```php
+
+/**
+ * This is a PHP code that extends the AbstractSocketClientHandler class and implements the run() method.
+ * It checks if the received message is in JSON format,
+ * joins the specified channel, and sends the message to that channel.
+ */
 
 class Handler extends AbstractSocketClientHandler
 {
@@ -187,22 +193,24 @@ This code forwards the message to the connected server and closes the connection
 In this way, it provides incredible flexibility,
 you can even create an API socket server, yes, it sounds nice, doesn't it?
 
+
+
 ```php
-use Zeus\Pusher\SocketClient;                                                                          
-                                                                                                       
-                                                                                                       
-$socketClient = new SocketClient('0.0.0.0', 8080);                                                     
-                                                                                                       
-$socketClient->sleep(1);                                                                               
-                                                                                                       
+use Zeus\Pusher\SocketClient;                                     
+                                                                  
+                                                                  
+$socketClient = new SocketClient('0.0.0.0', 8080);                
+                                                                  
+$socketClient->sleep(1);                                          
+                                                                  
 $message=json_encode([
     'channel'=>'backend',
     'message'=>'a new backend developer has applied'
     ]);    
          
-$socketClient->send($message);                                                                         
-                                                                                                       
-return $socketClient->read();                                                                          
+$socketClient->send($message);                                    
+                                                                  
+return $socketClient->read();                                     
 ```
 
 ### For more information
