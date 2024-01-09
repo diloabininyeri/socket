@@ -184,20 +184,17 @@ In this way, it provides incredible flexibility,
 you can even create an API socket server, yes, it sounds nice, doesn't it?
 
 ```php
-
-use Zeus\Pusher\SocketClient;
-
-
-
-
-$socketClient = new SocketClient('0.0.0.0', 8080);
-
-$socketClient->sleep(1);
-
-$message=json_encode(['channel'=>'backend','message'=>'a new backend developer has applied']);
-$socketClient->send($message);
-
-return $socketClient->read();
+use Zeus\Pusher\SocketClient;                                                                          
+                                                                                                       
+                                                                                                       
+$socketClient = new SocketClient('0.0.0.0', 8080);                                                     
+                                                                                                       
+$socketClient->sleep(1);                                                                               
+                                                                                                       
+$message=json_encode(['channel'=>'backend','message'=>'a new backend developer has applied']);         
+$socketClient->send($message);                                                                         
+                                                                                                       
+return $socketClient->read();                                                                          
 ```
 
 ### For more information
