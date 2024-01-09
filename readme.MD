@@ -191,7 +191,11 @@ $socketClient = new SocketClient('0.0.0.0', 8080);
                                                                                                        
 $socketClient->sleep(1);                                                                               
                                                                                                        
-$message=json_encode(['channel'=>'backend','message'=>'a new backend developer has applied']);         
+$message=json_encode([
+    'channel'=>'backend',
+    'message'=>'a new backend developer has applied'
+    ]);    
+         
 $socketClient->send($message);                                                                         
                                                                                                        
 return $socketClient->read();                                                                          
