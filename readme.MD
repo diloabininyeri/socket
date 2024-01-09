@@ -7,7 +7,11 @@ for install
 ```console
 composer require zeus/pusher:dev-main
 ```
-let's, For example, let's send the message to everyone.
+
+### Socket Server Management
+We manage the entire socket server with an object inherited from the AbstractSocketClientHandler object...
+In the example below, it is the ClientHandler object, but this is entirely up to your wishes.
+Let's, For example, let's send the message to everyone.
 
 server.php
 ```php
@@ -91,6 +95,11 @@ $socketServer->serve('127.0.0.1', 8080);
 ### Works with the json
 Let's subscribe to the channels with the json coming from the frontend and send messages to the channels.
 js code
+
+This example subscribes to the channel according to the json data coming from the clients
+and sends the message to the subscribed channel.
+
+**In the frontend**
 ```javascript
 
 const message = document.querySelector('#message');
@@ -99,7 +108,7 @@ const data = {channel: channel.value, message: message.value};
 socket.send(JSON.stringify(data));
 
 ```
-php code 
+**In the Backend**
 ```php
 
 class Handler extends AbstractSocketClientHandler
@@ -130,3 +139,36 @@ class Handler extends AbstractSocketClientHandler
 $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 9999);
 ```
+
+### The client
+
+The php client does not listen to the socket, so what is the purpose?
+
+It allows sending messages to connected connections.
+You can even make this client compatible with the API and send messages to language-independent sockets.
+
+This code forwards the message to the connected server and closes the connection.
+In this way, it provides incredible flexibility,
+you can even create an API socket server, yes, it sounds nice, doesn't it?
+
+```php
+
+use Zeus\Pusher\SocketClient;
+
+
+
+
+$socketClient = new SocketClient('0.0.0.0', 8080);
+
+$socketClient->sleep(1);
+
+$message=json_encode(['channel'=>'backend','message'=>'a new backend developer has applied']);
+$socketClient->send($message);
+
+return $socketClient->read();
+```
+
+### For more information
+to be continued...
+<br>
+[|||||||||||||||]
