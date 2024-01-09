@@ -18,7 +18,7 @@ Let's, For example, let's send the message to everyone.
 server.php
 ```php
 use Zeus\Pusher\AbstractSocketClientHandler;
-use Zeus\Pusher\Send;use Zeus\Pusher\SocketServer;
+use Zeus\Pusher\SocketServer;
 
 
 class ClientHandler extends AbstractSocketClientHandler
@@ -148,7 +148,9 @@ socket.send(JSON.stringify(data));
 ```php
 
 /**
- * This is a PHP code that extends the AbstractSocketClientHandler class and implements the run() method.
+ * This is a PHP code that extends
+ * the AbstractSocketClientHandler class
+ * and implements the run() method.
  * It checks if the received message is in JSON format,
  * joins the specified channel, and sends the message to that channel.
  */
@@ -179,7 +181,7 @@ class Handler extends AbstractSocketClientHandler
 
 
 $socketServer = new SocketServer(Handler::class);
-$socketServer->serve('127.0.0.1', 9999);
+$socketServer->serve('127.0.0.1', 8080);
 ```
 
 ### The client
