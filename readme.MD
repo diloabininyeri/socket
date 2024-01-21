@@ -5,7 +5,7 @@ This is a socket library, it is an advanced library, the purpose of which is to 
 
 for install
 ```console
-composer require zeus/pusher:dev-main
+composer require zeus/pusher
 ```
 
 ### Socket Server Management
