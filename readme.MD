@@ -214,8 +214,8 @@ $socketClient->send($message);
                                                                   
 return $socketClient->read();                                     
 ```
-###
-
+### Send a custom message
+You can send a message to a special client, for example, let's send a message only to the currently connected client.
 ```php
 class Handler extends AbstractSocketClientHandler
 {
