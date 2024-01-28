@@ -82,4 +82,31 @@ readonly class Send
             $this->channel($channelName, $message);
         }
     }
+
+
+    /**
+     * @param Socket $client
+     * @param string $message
+     * @return void
+     */
+    public function exceptClient(Socket $client, string $message): void
+    {
+        $channel = $this->broadcast->findChannel('public');
+        $sockets=$channel->getSockets();
+
+        if (empty($sockets)) {
+            return;
+        }
+        $exceptions = null;
+        $writeSockets = $sockets;
+        $select = socket_Select($sockets, $writeSockets, $exceptions, 5);
+        if ($select > 0) {
+            foreach ($writeSockets as $writeSocket) {
+                if ($client === $writeSocket) {
+                    continue;
+                }
+                socket_write($writeSocket, Message::encode($message));
+            }
+        }
+    }
 }

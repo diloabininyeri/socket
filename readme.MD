@@ -224,7 +224,10 @@ class Handler extends AbstractSocketClientHandler
     public function run(): void
     {
 
+        //send yourself a message
         $this->sendTo()->client($this->getClient(),'Hello, world');
+        //send it to everyone except himself
+        $this->sendTo()->exceptClient($this->getClient(),'Hello world');
     }
 }
 
