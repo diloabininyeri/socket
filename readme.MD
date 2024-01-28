@@ -123,8 +123,8 @@ class Handler extends AbstractSocketClientHandler
 }
 ```
 
->note: leave method does not support wildcard for now.
-it will not working,I thought this was not appropriate due to its completely irreversible effects
+> note: leave method does not support wildcard for now.
+> it will not working,I thought this was not appropriate due to its completely irreversible effects
 ```php
 $this->leave('it.*');
 ```
@@ -214,7 +214,24 @@ $socketClient->send($message);
                                                                   
 return $socketClient->read();                                     
 ```
+###
 
+```php
+class Handler extends AbstractSocketClientHandler
+{
+
+    #[\Override]
+    public function run(): void
+    {
+
+        $this->sendTo()->client($this->getClient(),'Hello, world');
+    }
+}
+
+
+$socketServer = new SocketServer(Handler::class);
+$socketServer->serve('127.0.0.1', 8080);
+```
 ### For more information
 to be continued...
 <br>

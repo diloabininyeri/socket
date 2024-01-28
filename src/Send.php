@@ -2,6 +2,8 @@
 
 namespace Zeus\Pusher;
 
+use Socket;
+
 /**
  *
  */
@@ -60,7 +62,15 @@ readonly class Send
         }
 
     }
-
+    /**
+     * @param Socket $client
+     * @param string $message
+     * @return void
+     */
+    public function client(Socket $client, string $message): void
+    {
+        socket_write($client, Message::encode($message));
+    }
     /**
      * @param array $channelNames
      * @param string $message
