@@ -15,7 +15,7 @@
 <button onclick="test()">try it</button>
 
 <script>
-    const socket = new WebSocket('ws://192.168.1.159:8080');
+    const socket = new WebSocket('ws://0.0.0.0:8080');
 
     socket.onopen = function (ev) {
         console.log('opened connection');
@@ -23,7 +23,7 @@
     };
 
     socket.onmessage = function (ev) {
-        console.log('recep');
+        console.log(ev);
        alert(ev.data);
     };
 

@@ -35,6 +35,11 @@ abstract class AbstractSocketClientHandler
     }
 
     /**
+     * @return void
+     */
+    abstract public function run(): void;
+
+    /**
      * @param Socket $socket
      * @return void
      */
@@ -114,11 +119,6 @@ abstract class AbstractSocketClientHandler
         return Arr::dot($dotNotation, $this->getJson(), $default);
     }
 
-    /**
-     * @return void
-     */
-    abstract public function run(): void;
-
     /***
      * @return array
      * @throws JsonException
@@ -133,5 +133,13 @@ abstract class AbstractSocketClientHandler
         }
         $this->extractedJson = json_decode($this->getMessage(), true, 512, JSON_THROW_ON_ERROR);
         return $this->extractedJson;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId():string
+    {
+        return Id::get($this->getClient());
     }
 }

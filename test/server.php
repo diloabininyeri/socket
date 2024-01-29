@@ -11,14 +11,11 @@ class Handler extends AbstractSocketClientHandler
 {
 
     /**
-     * @throws JsonException
      */
     #[\Override]
     public function run(): void
     {
-        $this->sendTo()->everyone(
-            $this->getJsonValue('message','default message')
-        );
+        $this->sendTo()->id($this->getId(), 'hello');
     }
 }
 

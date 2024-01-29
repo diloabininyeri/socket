@@ -235,6 +235,22 @@ class Handler extends AbstractSocketClientHandler
 $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 8080);
 ```
+
+### Send a message by socket id
+
+```php
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     */
+    #[\Override]
+    public function run(): void
+    {
+        $this->sendTo()->id($this->getId(), 'hello');
+    }
+}
+```
 ### For more information
 to be continued...
 <br>

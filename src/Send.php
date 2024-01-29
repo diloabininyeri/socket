@@ -91,8 +91,7 @@ readonly class Send
      */
     public function exceptClient(Socket $client, string $message): void
     {
-        $channel = $this->broadcast->findChannel('public');
-        $sockets=$channel->getSockets();
+        $sockets = $this->getPublicSockets();
 
         if (empty($sockets)) {
             return;
@@ -108,5 +107,29 @@ readonly class Send
                 socket_write($writeSocket, Message::encode($message));
             }
         }
+    }
+
+    /**
+     * @param string $id
+     * @param string $message
+     * @return void
+     */
+    public function id(string $id, string $message):void
+    {
+        $sockets = $this->getPublicSockets();
+        foreach ($sockets as $socket) {
+            if (Id::isBelong($id, $socket)) {
+                socket_write($socket, Message::encode($message));
+                break;
+            }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getPublicSockets(): array
+    {
+        return $this->broadcast->findChannel('public')->getSockets();
     }
 }
