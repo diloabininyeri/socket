@@ -168,7 +168,7 @@ class Broadcast
      */
     public function createChannel(string $channelName): Channel
     {
-        return $this->channels[$channelName] = new Channel($channelName);
+        return $this->channels[$channelName] ??= new Channel($channelName);
     }
 
     /***
