@@ -237,7 +237,8 @@ $socketServer->serve('127.0.0.1', 8080);
 ```
 
 ### Send a message by socket id
-
+The socket ID can be used to send a custom message. Below is an example of sending a message to a specific socket ID.
+A feature designed especially for sending personal messages.
 ```php
 class Handler extends AbstractSocketClientHandler
 {
