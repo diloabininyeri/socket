@@ -133,7 +133,7 @@ readonly class Send
      * @param string $message
      * @return void
      */
-    public function toRoute(string $path, string $message): void
+    public function route(string $path, string $message): void
     {
         $channelNameByRoute = $this->broadcast->createChannelNameByRoute($path);
         $this->channel($channelNameByRoute, $message);

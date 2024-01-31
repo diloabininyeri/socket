@@ -256,7 +256,6 @@ class Handler extends AbstractSocketClientHandler
 ### Websocket routes
 You can create a namespace using js websocket and route path, below are examples of js and php codes.
 
-
 ```php
 
 class Handler extends AbstractSocketClientHandler
@@ -267,7 +266,7 @@ class Handler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->sendTo()->toRoute('/chat', 'hello world');
+        $this->sendTo()->route('/chat', 'hello world');
     }
 }
 
