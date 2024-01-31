@@ -20,4 +20,7 @@ class Handler extends AbstractSocketClientHandler
 
 
 $socketServer = new SocketServer(Handler::class);
-$socketServer->serve($_ENV['HOST'],$_ENV['PORT']);
+$socketServer->serve(
+    $_ENV['HOST'] ?? '0.0.0.0',
+    $_ENV['PORT'] ?? 8080
+);
