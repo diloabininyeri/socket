@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  php-app:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www/html
+    container_name: php_websocket
+    restart: unless-stopped
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
