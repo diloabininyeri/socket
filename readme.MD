@@ -278,7 +278,18 @@ $socketServer->serve('0.0.0.0',8080);
 javascript websocket 
 
 ```js
-    const socket = new WebSocket('ws://0.0.0.0:8080/chat');
+const socket = new WebSocket('ws://0.0.0.0:8080/chat');
+
+socket.onopen = function (ev) {
+    console.log('opened connection');
+    console.log(ev);
+};
+
+socket.onmessage = function (ev) {
+    console.log(ev);
+    alert(ev.data);
+};
+
 ```
 ### For more information
 to be continued...
