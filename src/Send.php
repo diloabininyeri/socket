@@ -62,6 +62,7 @@ readonly class Send
         }
 
     }
+
     /**
      * @param Socket $client
      * @param string $message
@@ -71,6 +72,7 @@ readonly class Send
     {
         socket_write($client, Message::encode($message));
     }
+
     /**
      * @param array $channelNames
      * @param string $message
@@ -114,7 +116,7 @@ readonly class Send
      * @param string $message
      * @return void
      */
-    public function id(string $id, string $message):void
+    public function id(string $id, string $message): void
     {
         $sockets = $this->getPublicSockets();
         foreach ($sockets as $socket) {
@@ -123,6 +125,26 @@ readonly class Send
                 break;
             }
         }
+    }
+
+
+    /**
+     * @param string $path
+     * @param string $message
+     * @return void
+     */
+    public function toRoute(string $path, string $message): void
+    {
+        $channelNameByRoute = $this->broadcast->createChannelNameByRoute($path);
+        $this->channel($channelNameByRoute, $message);
+    }
+
+    /**
+     * @return Broadcast
+     */
+    public function getBroadcast(): Broadcast
+    {
+        return $this->broadcast;
     }
 
     /**

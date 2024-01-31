@@ -15,7 +15,8 @@ class Handler extends AbstractSocketClientHandler
     #[\Override]
     public function run(): void
     {
-        $this->sendTo()->id($this->getId(), 'hello');
+        $this->sendTo()->everyone('everyone');
+        $this->sendTo()->toRoute('/chat', 'hello world');
     }
 }
 

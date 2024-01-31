@@ -84,6 +84,17 @@ class Broadcast
     }
 
     /**
+     * @param string $path
+     * @param Socket $socket
+     * @return void
+     */
+    public function joinRoute(string $path, Socket $socket): void
+    {
+        $channelName = $this->createChannelNameByRoute($path);
+        $this->join($channelName, $socket);
+    }
+
+    /**
      * @param string $channelName
      * @param Socket $socket
      * @return bool
@@ -200,5 +211,18 @@ class Broadcast
         }
 
         return $this->channels[$channelName]?->getSockets() ?? [];
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public function createChannelNameByRoute(string $path): string
+    {
+        $trim = trim($path, '/');
+        if (empty($trim)) {
+            $trim = '/';
+        }
+        return sprintf('route_path_%s', $trim);
     }
 }

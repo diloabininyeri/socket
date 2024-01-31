@@ -226,7 +226,11 @@ class SocketServer
         $newClient = socket_accept($this->socket);
         if (false !== $newClient) {
             $this->clients[] = $newClient;
-            HandShake::to($newClient)->accept();
+            $handShake = HandShake::to($newClient);
+            $handShake->accept();
+            if ($handShake->getPath() !== '/') {
+                $this->broadcast->joinRoute($handShake->getPath(), $newClient);
+            }
         }
     }
 

@@ -19,14 +19,19 @@ class HandShake
      */
     private Socket $socket;
 
+
+    private array $rawHeaders;
+
     /**
      * @param array $headers
      * @param Socket $socket
+     * @param array $rawHeaders
      */
-    public function __construct(array $headers, Socket $socket)
+    public function __construct(array $headers, Socket $socket, array $rawHeaders = array())
     {
         $this->headers = $headers;
         $this->socket = $socket;
+        $this->rawHeaders = $rawHeaders;
     }
 
     /**
@@ -35,7 +40,8 @@ class HandShake
      */
     public static function to(Socket $socket): self
     {
-        return new self(static::readHeaders($socket), $socket);
+        [$headers, $rawHeaders] = static::readHeaders($socket);
+        return new self($headers, $socket, $rawHeaders);
     }
 
     /**
@@ -63,13 +69,23 @@ class HandShake
     private static function readHeaders(Socket $socket): array
     {
         $headers = [];
-        $lines = preg_split("/\r\n/", socket_read($socket, 4096), -1, PREG_SPLIT_NO_EMPTY);
-        foreach ($lines as $line) {
+        $rawHeaders = preg_split("/\r\n/", socket_read($socket, 4096), -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($rawHeaders as $line) {
             $line = rtrim($line);
             if (preg_match('/\A(\S+): (.*)\z/', $line, $matches)) {
                 $headers[$matches[1]] = $matches[2];
             }
         }
-        return $headers;
+        return [$headers, $rawHeaders];
+    }
+
+    public function getPath(): string
+    {
+        foreach ($this->rawHeaders as $header) {
+            if (preg_match('/^GET \/(\S+) HTTP\/(\S+)$/', $header, $matches)) {
+                return sprintf('/%s', $matches[1]);
+            }
+        }
+        return '/';
     }
 }
