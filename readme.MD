@@ -314,7 +314,34 @@ class Handler extends AbstractSocketClientHandler
     }
 }
 ```
+### Get the status of the client
 
+You can get any client status
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     */
+    #[\Override]
+    public function run(): void
+    {
+        //type 1 using 
+        
+        $status=$this->getStatus();
+        
+        //type 2 using
+        
+        $sockets=$this->findChannel('it.backend')->getSockets();
+        foreach($sockets as $socket){
+            $status=$this->getStatus($socket);
+            print_r($status);
+        }
+      
+    }
+}
+```
 ### For more information
 to be continued...
 <br>
