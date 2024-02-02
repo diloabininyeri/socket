@@ -158,4 +158,14 @@ abstract class AbstractSocketClientHandler
     {
         return explode(':', $this->getRemoteAddress())[0];
     }
+    /**
+     * @param Socket|null $socket
+     * @return array
+     */
+    public function getStatus(Socket $socket=null):array
+    {
+        return stream_get_meta_data(
+            socket_export_stream($socket ?: $this->client)
+        );
+    }
 }
