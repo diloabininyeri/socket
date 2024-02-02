@@ -142,4 +142,20 @@ abstract class AbstractSocketClientHandler
     {
         return Id::get($this->getClient());
     }
+    /***
+     * @return string
+     */
+    public function getRemoteAddress(): string
+    {
+        socket_getpeername($this->client, $address, $port);
+        return "$address:$port";
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemoteHost(): string
+    {
+        return explode(':', $this->getRemoteAddress())[0];
+    }
 }
