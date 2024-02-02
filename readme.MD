@@ -290,6 +290,31 @@ socket.onmessage = function (ev) {
 };
 
 ```
+
+### The host address of the client
+Let's disconnect the socket connection of an ip address
+<br/>
+You can get the host or IP address of the connected client.
+In this way, you can deny an IP address, for example, let's disconnect a client whose IP value is x.x.x.x.
+
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     */
+    #[\Override]
+    public function run(): void
+    {
+        $host=$this->getRemoteHost();
+        if('x.x.x.x'===$host){
+            $this->disconnect($this->getClient());
+        }
+    }
+}
+```
+
 ### For more information
 to be continued...
 <br>
