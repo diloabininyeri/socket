@@ -165,7 +165,16 @@ abstract class AbstractSocketClientHandler
     public function getStatus(Socket $socket=null):array
     {
         return stream_get_meta_data(
-            socket_export_stream($socket ?: $this->client)
+            $this->toStream($socket)
         );
+    }
+
+    /**
+     * @param Socket|null $socket
+     * @return false|resource|Socket
+     */
+    public function toStream(Socket $socket=null)
+    {
+        return socket_export_stream($socket ?: $this->client);
     }
 }
