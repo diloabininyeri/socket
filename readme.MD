@@ -373,8 +373,41 @@ class Handler extends AbstractSocketClientHandler
       
     }
 }
+
+### More
+
 ```
 ### For more information
+Now, if you want to add Channel Broadcast and Send classes, there is a way to do this. For example, let's create a method for Send and use it.
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     */
+    #[\Override]
+    public function run(): void
+    {
+        Send::method(
+            'test',
+            static fn(Socket $client) => socket_write($client, Message::encode('test'))
+        );
+
+
+        Channel::method(
+            'empty',
+            static fn() => $this->clients=[])
+        );
+
+        $this->sendTo()->test($this->getClient());
+        $this->findChannel('it.backend')->empty();
+    }
+}
+```
+If you pay attention, the 'test' and 'empty' methods do not actually exist, we simulated them as if they existed.
+
+
 to be continued...
 <br>
 [|||||||||||||||]
