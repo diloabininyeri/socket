@@ -121,7 +121,7 @@ class Handler extends AbstractSocketClientHandler
        //get all clients of the public channel
        $clients=$this->findChannel('public')->getClients();
        foreach($clients as $client){
-           $ip=$client->getRemoteHost($client);
+           $ip=$this->getRemoteHost($client);
            if('x.x.x.x'===$ip){
                $this->disconnect($client);
            }
