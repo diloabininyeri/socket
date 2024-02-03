@@ -2,8 +2,7 @@
 
 namespace Zeus\Pusher;
 
-use Closure;
-use Zeus\Pusher\exceptions\ClientException;
+use Zeus\Pusher\Exceptions\ClientException;
 
 /**
  *
@@ -82,3 +81,4 @@ class SocketClient
         return $this->client;
     }
 }
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zeus\Pusher\exceptions;
+namespace Zeus\Pusher\Exceptions;
 
 use RuntimeException;
 

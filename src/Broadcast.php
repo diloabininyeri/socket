@@ -3,7 +3,7 @@
 namespace Zeus\Pusher;
 
 use Socket;
-use Zeus\Pusher\exceptions\InvalidPatternException;
+use Zeus\Pusher\Exceptions\InvalidPatternException;
 
 /**
  *
