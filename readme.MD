@@ -317,6 +317,7 @@ class Handler extends AbstractSocketClientHandler
 ### Get the status of the client
 
 You can get any client status
+
 ```php
 
 class Handler extends AbstractSocketClientHandler
@@ -333,7 +334,7 @@ class Handler extends AbstractSocketClientHandler
         
         //type 2 using
         
-        $sockets=$this->findChannel('it.backend')->getSockets();
+        $sockets=$this->findChannel('it.backend')->getClients();
         foreach($sockets as $socket){
             $status=$this->getStatus($socket);
             print_r($status);

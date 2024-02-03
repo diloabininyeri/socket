@@ -70,17 +70,17 @@ class SocketServer
      */
     private function handleConnections(): void
     {
-        $sockets = $this->clients;
-        $socketSelect = socket_select($sockets, $wr, $exc, $this->getTimeout());
+        $clients = $this->clients;
+        $socketSelect = socket_select($clients, $wr, $exc, $this->getTimeout());
 
         if ($socketSelect === false) {
             $this->handleSocketError();
         }
-        foreach ($sockets as $socket) {
-            if ($socket === $this->socket) {
+        foreach ($clients as $client) {
+            if ($client === $this->socket) {
                 $this->handleNewConnection();
             } else {
-                $this->handleExistingConnection($socket);
+                $this->handleExistingConnection($client);
             }
         }
     }
@@ -106,24 +106,24 @@ class SocketServer
 
     /**
      * @param AbstractSocketClientHandler $clientHandler
-     * @param Socket $socket
+     * @param Socket $client
      * @param string|false $message
      * @return void
      */
     private function setSocketOfHandler(
         AbstractSocketClientHandler $clientHandler,
-        Socket                      $socket,
+        Socket                      $client,
         string|false                $message): void
     {
 
         if ($message) {
-            $clientHandler->setClient($socket);
+            $clientHandler->setClient($client);
             $clientHandler->setMessage($message);
             $this->addSocketHandlerInstance($clientHandler);
             return;
         }
 
-        $this->removeSocket($socket);
+        $this->removeSocket($client);
         $this->removeHandlerInstance($clientHandler);
 
     }
@@ -155,12 +155,12 @@ class SocketServer
     }
 
     /**
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    private function removeFromClients(Socket $socket): void
+    private function removeFromClients(Socket $client): void
     {
-        $index = array_search($socket, $this->clients, true);
+        $index = array_search($client, $this->clients, true);
         unset($this->clients[$index]);
     }
 
@@ -198,14 +198,14 @@ class SocketServer
     }
 
     /**
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    private function removeSocket(Socket $socket): void
+    private function removeSocket(Socket $client): void
     {
-        $this->removeFromClients($socket);
-        $this->broadcast->forget($socket);
-        $this->broadcast->close($socket);
+        $this->removeFromClients($client);
+        $this->broadcast->forget($client);
+        $this->broadcast->close($client);
     }
 
     /**
@@ -235,17 +235,17 @@ class SocketServer
     }
 
     /**
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    private function handleExistingConnection(Socket $socket): void
+    private function handleExistingConnection(Socket $client): void
     {
-        $this->broadcast->join('public', $socket);
+        $this->broadcast->join('public', $client);
 
         $this->setSocketOfHandler(
             $this->getSocketHandlerInstance(),
-            $socket,
-            $read = socket_read($socket, 1024)
+            $client,
+            $read = socket_read($client, 1024)
         );
         $this->callDebug($read);
     }

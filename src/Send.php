@@ -152,6 +152,6 @@ readonly class Send
      */
     private function getPublicSockets(): array
     {
-        return $this->broadcast->findChannel('public')->getSockets();
+        return $this->broadcast->findChannel('public')->getClients();
     }
 }

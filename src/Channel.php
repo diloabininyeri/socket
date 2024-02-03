@@ -55,7 +55,7 @@ class Channel
     /**
      * @return array
      */
-    public function getSockets(): array
+    public function getClients(): array
     {
         return $this->sockets;
     }

@@ -37,13 +37,13 @@ class Broadcast
      */
     private function getSocketsByPattern(string $wildcardPattern): array
     {
-        $sockets = [];
+        $clients = [];
         foreach ($this->getChannelNamesByWildcard($wildcardPattern) as $channelName) {
-            $sockets[] = $this->findChannel($channelName)->getSockets();
+            $clients[] = $this->findChannel($channelName)->getClients();
         }
 
         return Arr::unique(
-            Arr::flatten($sockets)
+            Arr::flatten($clients)
         );
     }
 
@@ -73,49 +73,49 @@ class Broadcast
 
     /**
      * @param string $channelName
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    public function join(string $channelName, Socket $socket): void
+    public function join(string $channelName, Socket $client): void
     {
         $channel = $this->channels[$channelName] ?? new Channel($channelName);
-        $channel->join($socket);
+        $channel->join($client);
         $this->channels[$channelName] = $channel;
     }
 
     /**
      * @param string $path
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    public function joinRoute(string $path, Socket $socket): void
+    public function joinRoute(string $path, Socket $client): void
     {
         $channelName = $this->createChannelNameByRoute($path);
-        $this->join($channelName, $socket);
+        $this->join($channelName, $client);
     }
 
     /**
      * @param string $channelName
-     * @param Socket $socket
+     * @param Socket $client
      * @return bool
      */
-    public function hasJoin(string $channelName, Socket $socket): bool
+    public function hasJoin(string $channelName, Socket $client): bool
     {
         if (!$this->hasChannel($channelName)) {
             return false;
         }
-        return $this->findChannel($channelName)->hasJoin($socket);
+        return $this->findChannel($channelName)->hasJoin($client);
     }
 
     /**
      * @param string $channel
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    public function leave(string $channel, Socket $socket): void
+    public function leave(string $channel, Socket $client): void
     {
         if (isset($this->channels[$channel])) {
-            $this->channels[$channel]->leave($socket);
+            $this->channels[$channel]->leave($client);
         }
     }
 
@@ -126,7 +126,7 @@ class Broadcast
     public function forget(Socket $socket): void
     {
         foreach ($this->channels as $channel) {
-            foreach ($channel->getSockets() as $client) {
+            foreach ($channel->getClients() as $client) {
                 if ($client === $socket) {
                     $channelName = $channel->getName();
                     $this->leave($channelName, $socket);
@@ -137,13 +137,13 @@ class Broadcast
     }
 
     /**
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    public function close(Socket $socket): void
+    public function close(Socket $client): void
     {
         foreach ($this->channels as $channel) {
-            $channel->leave($socket);
+            $channel->leave($client);
         }
     }
 
@@ -190,14 +190,14 @@ class Broadcast
         return $this->sendInstance;
     }
     /**
-     * @param Socket $socket
+     * @param Socket $client
      * @return void
      */
-    public function disconnect(Socket $socket): void
+    public function disconnect(Socket $client): void
     {
-        $this->forget($socket);
-        $this->close($socket);
-        socket_shutdown($socket);
+        $this->forget($client);
+        $this->close($client);
+        socket_shutdown($client);
     }
 
     /**
@@ -210,7 +210,7 @@ class Broadcast
             return $this->getSocketsByPattern($channelName);
         }
 
-        return $this->channels[$channelName]?->getSockets() ?? [];
+        return $this->channels[$channelName]?->getClients() ?? [];
     }
 
     /**
