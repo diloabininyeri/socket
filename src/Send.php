@@ -106,7 +106,7 @@ readonly class Send
                 if ($client === $writeSocket) {
                     continue;
                 }
-                socket_write($writeSocket, Message::encode($message));
+                $this->client($writeSocket, $message);
             }
         }
     }
@@ -137,14 +137,6 @@ readonly class Send
     {
         $channelNameByRoute = $this->broadcast->createChannelNameByRoute($path);
         $this->channel($channelNameByRoute, $message);
-    }
-
-    /**
-     * @return Broadcast
-     */
-    public function getBroadcast(): Broadcast
-    {
-        return $this->broadcast;
     }
 
     /**
