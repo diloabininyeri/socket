@@ -103,6 +103,37 @@ $socketServer = new SocketServer(Handler::class);
 $socketServer->serve('127.0.0.1', 8080);
 ```
 
+### Clients of a channel
+>You can get all the clients subscribed to a channel for example by default, all clients are subscribed to the channel named public.
+
+>You can receive all channels in the system and attract clients connected to these channels and perform transactions.
+```php
+
+class Handler extends AbstractSocketClientHandler
+{
+
+    #[\Override]
+    public function run(): void
+    {
+      //get all channels
+       $channels=$this->getChannels();
+       
+       //get all clients of the public channel
+       $clients=$this->findChannel('public')->getClients();
+       foreach($clients as $client){
+           $ip=$client->getRemoteHost($client);
+           if('x.x.x.x'===$ip){
+               $this->disconnect($client);
+           }
+       }
+       
+    }
+}
+
+
+$socketServer = new SocketServer(Handler::class);
+$socketServer->serve('127.0.0.1', 8080);
+```
 **Some methods for the channel, but don't forget there are more**
 
 ```php
@@ -334,9 +365,9 @@ class Handler extends AbstractSocketClientHandler
         
         //type 2 using
         
-        $sockets=$this->findChannel('it.backend')->getClients();
-        foreach($sockets as $socket){
-            $status=$this->getStatus($socket);
+        $clients=$this->findChannel('it.backend')->getClients();
+        foreach($clients as $client){
+            $status=$this->getStatus($client);
             print_r($status);
         }
       
