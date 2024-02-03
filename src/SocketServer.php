@@ -99,7 +99,7 @@ class SocketServer
     /**
      * @return AbstractSocketClientHandler
      */
-    private function getSocketHandlerInstance(): AbstractSocketClientHandler
+    private function getClientHandlerInstance(): AbstractSocketClientHandler
     {
         return new ($this->handlerClass)($this->broadcast);
     }
@@ -110,7 +110,7 @@ class SocketServer
      * @param string|false $message
      * @return void
      */
-    private function setSocketOfHandler(
+    private function setClientOfHandler(
         AbstractSocketClientHandler $clientHandler,
         Socket                      $client,
         string|false                $message): void
@@ -119,11 +119,11 @@ class SocketServer
         if ($message) {
             $clientHandler->setClient($client);
             $clientHandler->setMessage($message);
-            $this->addSocketHandlerInstance($clientHandler);
+            $this->addClientHandlerInstance($clientHandler);
             return;
         }
 
-        $this->removeSocket($client);
+        $this->removeClient($client);
         $this->removeHandlerInstance($clientHandler);
 
     }
@@ -132,7 +132,7 @@ class SocketServer
      * @param AbstractSocketClientHandler $clientHandler
      * @return void
      */
-    private function addSocketHandlerInstance(AbstractSocketClientHandler $clientHandler): void
+    private function addClientHandlerInstance(AbstractSocketClientHandler $clientHandler): void
     {
         $this->clientHandlers[] = $clientHandler;
     }
@@ -201,7 +201,7 @@ class SocketServer
      * @param Socket $client
      * @return void
      */
-    private function removeSocket(Socket $client): void
+    private function removeClient(Socket $client): void
     {
         $this->removeFromClients($client);
         $this->broadcast->forget($client);
@@ -242,8 +242,8 @@ class SocketServer
     {
         $this->broadcast->join('public', $client);
 
-        $this->setSocketOfHandler(
-            $this->getSocketHandlerInstance(),
+        $this->setClientOfHandler(
+            $this->getClientHandlerInstance(),
             $client,
             $read = socket_read($client, 1024)
         );
