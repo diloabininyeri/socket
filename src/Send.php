@@ -7,14 +7,14 @@ use Socket;
 /**
  *
  */
-readonly class Send
+class Send
 {
 
     use MacroTrait;
     /**
      * @param Broadcast $broadcast
      */
-    public function __construct(private Broadcast $broadcast)
+    public function __construct(private readonly Broadcast $broadcast)
     {
     }
 
