@@ -10,6 +10,7 @@ use Zeus\Pusher\Exceptions\InvalidPatternException;
  */
 class Broadcast
 {
+    use MacroTrait;
     /**
      * @var Channel[] array of channels
      */

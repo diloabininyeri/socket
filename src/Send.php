@@ -10,6 +10,7 @@ use Socket;
 readonly class Send
 {
 
+    use MacroTrait;
     /**
      * @param Broadcast $broadcast
      */

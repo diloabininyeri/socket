@@ -9,6 +9,8 @@ use Socket;
  */
 class Channel
 {
+
+    use MacroTrait;
     /**
      * @var array
      */

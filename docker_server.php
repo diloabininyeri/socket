@@ -1,6 +1,8 @@
 <?php
 
 use Zeus\Pusher\AbstractSocketClientHandler;
+use Zeus\Pusher\Message;
+use Zeus\Pusher\Send;
 use Zeus\Pusher\SocketServer;
 
 require_once 'vendor/autoload.php';
@@ -14,7 +16,13 @@ class Handler extends AbstractSocketClientHandler
     #[Override]
     public function run(): void
     {
-        $this->sendTo()->everyone('everyone');
+        Send::method(
+            'test',
+            static fn(Socket $client) => socket_write($client, Message::encode('test'))
+        );
+
+
+        $this->sendTo()->test($this->getClient());
     }
 }
 
