@@ -322,6 +322,39 @@ socket.onmessage = function (ev) {
 
 ```
 
+**is Route and hasRoute methods**
+
+
+1. **hasRoute:**
+   Is there any client connecting via /chat route?.
+
+2. **isRoute:**
+   Is the current client connected via the /chat route?.
+
+
+
+```php
+class Handler extends AbstractSocketClientHandler
+{
+
+    /**
+     */
+    #[Override]
+    public function run(): void
+    {
+        $this->hasRoute('/chat');//Is there any client connecting via /chat route?
+        $this->isRoute('/chat'); //Is the current client connected via the /chat route?
+    }
+}
+
+
+$socketServer = new SocketServer(Handler::class);
+$socketServer->serve(
+  '0.0.0.0',
+   8080
+);
+```
+
 ### The host address of the client
 Let's disconnect the socket connection of an ip address
 <br/>
