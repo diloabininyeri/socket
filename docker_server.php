@@ -14,6 +14,10 @@ class Handler extends AbstractSocketClientHandler
     #[Override]
     public function run(): void
     {
+
+        $this->hasRoute('/chat');//Is there any client connecting via /chat route?
+        $this->isRoute('/chat'); //Is the current client connected via the /chat route?
+
         $this->sendTo()->everyone('hello wo');
     }
 }

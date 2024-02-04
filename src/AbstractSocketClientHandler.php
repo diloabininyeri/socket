@@ -180,4 +180,23 @@ abstract class AbstractSocketClientHandler
     {
         return socket_export_stream($socket ?: $this->client);
     }
+    /***
+     * @param string $route
+     * @return bool
+     */
+    protected function isRoute(string $route): bool
+    {
+        return $this->broadcast->hasJoin(
+            $this->createChannelNameByRoute($route),
+            $this->getClient()
+        );
+    }
+    /**
+     * @param string $route
+     * @return bool
+     */
+    protected function hasRoute(string $route): bool
+    {
+        return $this->broadcast->hasChannel($this->createChannelNameByRoute($route));
+    }
 }
