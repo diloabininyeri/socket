@@ -1,34 +1,36 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: php-socket-deployment
-spec:
-  selector:
-    matchLabels:
-      app: socket_app
-  template:
-    metadata:
-      labels:
-        app: socket_app
-    spec:
-      containers:
-        - name: your-container
-          image: diloabininyeri/php_socket:latest #you should create this image from the Dockerfile
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 8080
-      restartPolicy: Always
----
 apiVersion: v1
-kind: Service
-metadata:
-  name: php-socket-service
-spec:
-  selector:
-    app: socket_app
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-      nodePort: 30008
-  type: NodePort
+kind: List
+items:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: php-socket-deployment
+    spec:
+      selector:
+        matchLabels:
+          app: socket_app
+      template:
+        metadata:
+          labels:
+            app: socket_app
+        spec:
+          containers:
+            - name: your-container
+              image: diloabininyeri/php_socket:latest #you should create this image from the Dockerfile
+              imagePullPolicy: Never
+              ports:
+                - containerPort: 8080
+          restartPolicy: Always
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: php-socket-service
+    spec:
+      selector:
+        app: socket_app
+      ports:
+        - protocol: TCP
+          port: 8080
+          targetPort: 8080
+          nodePort: 30008
+      type: NodePort
